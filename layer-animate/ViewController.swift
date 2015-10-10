@@ -35,9 +35,8 @@ class ViewController: UIViewController, UITextFieldDelegate {
     
     func setItems() {
         wbTextField.layer.position = CGPoint(x: self.view.bounds.width / 2, y: self.view.bounds.height / 2 + 60)
-        wbTextField.borderStyle = .RoundedRect
-        wbTextField.layer.cornerRadius = 5
         wbTextField.delegate = self
+        wbTextField.borderColor = UIColor.WBColor.Amber
         self.view.addSubview(wbTextField)
         
         let diameter = 100
