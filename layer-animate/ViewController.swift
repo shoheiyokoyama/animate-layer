@@ -46,11 +46,11 @@ class ViewController: UIViewController, UITextFieldDelegate {
         shapeLayer.path = UIBezierPath(ovalInRect: CGRect(x: 100, y: 100, width: diameter, height: diameter)).CGPath
         self.view.layer.addSublayer(shapeLayer)
         
-        toggleButton.setTitle("Animation Start", forState: .Normal)
+        toggleButton.setTitle("Check TEXT", forState: .Normal)
         toggleButton.setTitleColor(UIColor.blackColor(), forState: .Normal)
         toggleButton.addTarget(self, action: "onClickMyButton:", forControlEvents: .TouchUpInside)
         toggleButton.sizeToFit()
-        toggleButton.animateLayer = true
+        toggleButton.animateLayer = false
         self.view.addSubview(toggleButton)
         
         self.animateCircle()
@@ -73,18 +73,12 @@ class ViewController: UIViewController, UITextFieldDelegate {
     }
     
     internal func onClickMyButton(sender: UIButton) {
-        if wbTextField.animateLayer {
-            wbTextField.animateLayer = false
-            toggleButton.setTitle("Animation Start", forState: .Normal)
-        } else {
-            wbTextField.animateLayer = true
-            toggleButton.setTitle("Animation Stop", forState: .Normal)
-        }
-        
-        if toggleButton.animateLayer {
+        if wbTextField.checkEmptyText() {
             toggleButton.animateLayer = false
+            toggleButton.setTitle("NOT EMPTY", forState: .Normal)
         } else {
             toggleButton.animateLayer = true
+            toggleButton.setTitle("EMPTY", forState: .Normal)
         }
     }
 

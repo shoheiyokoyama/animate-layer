@@ -11,17 +11,15 @@ import UIKit
 public class WBTextField: UITextField {
     
     private var showBorder = Bool()
-    private var stopAnimation = true
     
     public var borderColor: UIColor = UIColor()
+    public var stopAnimationByTextEditing = true
     
     public var animateLayer = false {
         didSet {
             if animateLayer {
-                self.stopAnimation = false
                 self.appearBorder()
             } else {
-                self.stopAnimation = true
                 self.showBorder = false
                 
                 self.layer.borderColor = UIColor.clearColor().CGColor
@@ -52,8 +50,18 @@ public class WBTextField: UITextField {
         self.borderColor = UIColor.WBColor.DeepOrange
     }
     
+    public func checkEmptyText() -> Bool {
+        if self.text?.stringByTrimmingCharactersInSet(NSCharacterSet.whitespaceAndNewlineCharacterSet()).isEmpty == true {
+            print("TEXT EMPTY!!!")
+            animateLayer = true
+            return false
+        }
+        
+        return true
+    }
+    
     private func appearBorder() {
-        if stopAnimation {
+        if !animateLayer {
             return
         }
         
@@ -77,7 +85,7 @@ public class WBTextField: UITextField {
     }
     
     private func disappearBorder() {
-        if stopAnimation {
+        if !animateLayer {
             return
         }
         
@@ -110,5 +118,13 @@ public class WBTextField: UITextField {
         } else {
             self.appearBorder()
         }
+    }
+    
+    override public func beginTrackingWithTouch(touch: UITouch, withEvent event: UIEvent?) -> Bool {
+        if stopAnimationByTextEditing && animateLayer {
+            self.animateLayer = false
+        }
+        
+        return super.beginTrackingWithTouch(touch, withEvent: event)
     }
 }
