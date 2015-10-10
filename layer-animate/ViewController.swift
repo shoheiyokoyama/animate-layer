@@ -11,7 +11,7 @@ import UIKit
 class ViewController: UIViewController, UITextFieldDelegate {
 
     var wbTextField = WBTextField(frame: CGRectMake(0, 0, 200, 30))
-    let toggleButton = UIButton(frame: CGRectMake(100, 450, 100, 30))
+    let toggleButton = WBButton(frame: CGRectMake(100, 450, 100, 30))
     let shapeLayer = CAShapeLayer()
     
     override func viewDidLoad() {
@@ -47,11 +47,10 @@ class ViewController: UIViewController, UITextFieldDelegate {
         self.view.layer.addSublayer(shapeLayer)
         
         toggleButton.setTitle("Animation Start", forState: .Normal)
-        toggleButton.setTitleColor(UIColor.whiteColor(), forState: .Normal)
+        toggleButton.setTitleColor(UIColor.blackColor(), forState: .Normal)
         toggleButton.addTarget(self, action: "onClickMyButton:", forControlEvents: .TouchUpInside)
-        toggleButton.backgroundColor = UIColor.blueColor()
-        toggleButton.layer.cornerRadius = 5
         toggleButton.sizeToFit()
+        toggleButton.animateLayer = true
         self.view.addSubview(toggleButton)
         
         self.animateCircle()
@@ -80,6 +79,12 @@ class ViewController: UIViewController, UITextFieldDelegate {
         } else {
             wbTextField.animateLayer = true
             toggleButton.setTitle("Animation Stop", forState: .Normal)
+        }
+        
+        if toggleButton.animateLayer {
+            toggleButton.animateLayer = false
+        } else {
+            toggleButton.animateLayer = true
         }
     }
 

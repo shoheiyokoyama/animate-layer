@@ -16,6 +16,7 @@
 		6D098BD61BC68BF6005EDA39 /* layer_animateUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6D098BD51BC68BF6005EDA39 /* layer_animateUITests.swift */; };
 		6D098BE41BC7F1BE005EDA39 /* WBTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6D098BE31BC7F1BE005EDA39 /* WBTextField.swift */; settings = {ASSET_TAGS = (); }; };
 		6D098BE81BC8C374005EDA39 /* WBColor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6D098BE71BC8C374005EDA39 /* WBColor.swift */; settings = {ASSET_TAGS = (); }; };
+		6D098BEA1BC8CD10005EDA39 /* WBButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6D098BE91BC8CD10005EDA39 /* WBButton.swift */; settings = {ASSET_TAGS = (); }; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -51,6 +52,7 @@
 		6D098BD71BC68BF6005EDA39 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		6D098BE31BC7F1BE005EDA39 /* WBTextField.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WBTextField.swift; sourceTree = "<group>"; };
 		6D098BE71BC8C374005EDA39 /* WBColor.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WBColor.swift; sourceTree = "<group>"; };
+		6D098BE91BC8CD10005EDA39 /* WBButton.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = WBButton.swift; path = ../WBButton.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -105,6 +107,7 @@
 				6D098BB71BC68BF6005EDA39 /* ViewController.swift */,
 				6D098BE71BC8C374005EDA39 /* WBColor.swift */,
 				6D098BE31BC7F1BE005EDA39 /* WBTextField.swift */,
+				6D098BE91BC8CD10005EDA39 /* WBButton.swift */,
 				6D098BB91BC68BF6005EDA39 /* Main.storyboard */,
 				6D098BBC1BC68BF6005EDA39 /* Assets.xcassets */,
 				6D098BBE1BC68BF6005EDA39 /* LaunchScreen.storyboard */,
@@ -264,6 +267,7 @@
 				6D098BE81BC8C374005EDA39 /* WBColor.swift in Sources */,
 				6D098BB81BC68BF6005EDA39 /* ViewController.swift in Sources */,
 				6D098BB61BC68BF6005EDA39 /* AppDelegate.swift in Sources */,
+				6D098BEA1BC8CD10005EDA39 /* WBButton.swift in Sources */,
 				6D098BE41BC7F1BE005EDA39 /* WBTextField.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
