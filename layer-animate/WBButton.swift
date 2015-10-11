@@ -11,18 +11,16 @@ import UIKit
 public class WBButton: UIButton {
     
     private var showBorder = Bool()
-    private var stopAnimation = true
     
     public var borderColor: UIColor = UIColor()
     
     public var animateLayer = false {
         didSet {
             if animateLayer {
-                self.stopAnimation = false
                 self.appearBorder()
             } else {
-                self.stopAnimation = true
                 self.showBorder = false
+                self.layer.removeAllAnimations()
                 
                 self.layer.borderColor = UIColor.clearColor().CGColor
                 self.layer.borderWidth = 0
@@ -53,7 +51,7 @@ public class WBButton: UIButton {
     }
     
     private func appearBorder() {
-        if stopAnimation {
+        if !animateLayer {
             return
         }
         
@@ -77,7 +75,7 @@ public class WBButton: UIButton {
     }
     
     private func disappearBorder() {
-        if stopAnimation {
+        if !animateLayer {
             return
         }
         

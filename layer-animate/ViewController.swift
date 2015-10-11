@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import QuartzCore
 
 class ViewController: UIViewController, UITextFieldDelegate {
 
@@ -36,7 +37,7 @@ class ViewController: UIViewController, UITextFieldDelegate {
     func setItems() {
         wbTextField.layer.position = CGPoint(x: self.view.bounds.width / 2, y: self.view.bounds.height / 2 + 60)
         wbTextField.delegate = self
-        wbTextField.borderColor = UIColor.WBColor.Amber
+        wbTextField.borderColor = UIColor.WBColor.Cyan
         self.view.addSubview(wbTextField)
         
         let diameter = 100
@@ -73,12 +74,17 @@ class ViewController: UIViewController, UITextFieldDelegate {
     }
     
     internal func onClickMyButton(sender: UIButton) {
-        if wbTextField.checkEmptyText() {
-            toggleButton.animateLayer = false
-            toggleButton.setTitle("NOT EMPTY", forState: .Normal)
+//        if wbTextField.checkEmptyText() {
+//            toggleButton.animateLayer = false
+//            toggleButton.setTitle("NOT EMPTY", forState: .Normal)
+//        } else {
+//            toggleButton.animateLayer = true
+//            toggleButton.setTitle("EMPTY", forState: .Normal)
+//        }
+        if wbTextField.animateLayer {
+           wbTextField.animateLayer = false
         } else {
-            toggleButton.animateLayer = true
-            toggleButton.setTitle("EMPTY", forState: .Normal)
+            wbTextField.animateLayer = true
         }
     }
 

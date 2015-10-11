@@ -8,23 +8,54 @@
 
 import UIKit
 
+public enum WBBlinkingAnimation {
+    case Line
+    case Light
+}
+
 public class WBTextField: UITextField {
     
     private var showBorder = Bool()
     
-    public var borderColor: UIColor = UIColor()
+    private var fadeInShadow = CABasicAnimation()
+    private var fadeOutShadow = CABasicAnimation()
+    private var fadeInColor = CABasicAnimation()
+    private var fadeOutColor = CABasicAnimation()
+    private var fadeInWidth = CABasicAnimation()
+    private var fadeOutWidth = CABasicAnimation()
+    
+    public var borderColor: UIColor = UIColor.WBColor.DeepOrange {
+        didSet {
+            self.layer.shadowColor = borderColor.CGColor
+            self.resetColorAnimation()
+        }
+    }
+    
     public var stopAnimationByTextEditing = true
     
     public var animateLayer = false {
         didSet {
             if animateLayer {
-                self.appearBorder()
+                self.appear()
             } else {
                 self.showBorder = false
-                
-                self.layer.borderColor = UIColor.clearColor().CGColor
-                self.layer.borderWidth = 0
+                self.layer.removeAllAnimations()
+                self.clearBorder()
             }
+        }
+    }
+    
+    public var wbBlinkingAnimation: WBBlinkingAnimation = .Line {
+        didSet {
+            switch wbBlinkingAnimation {
+            case .Line:
+                self.setLineAnimation()
+            case .Light:
+                self.setLightAnimation()
+            default:
+                break
+            }
+            
         }
     }
     
@@ -43,68 +74,124 @@ public class WBTextField: UITextField {
         fatalError("init(coder:) has not been implemented")
     }
     
+    private func clearBorder() {
+        self.layer.borderColor = UIColor.clearColor().CGColor
+        self.layer.borderWidth = 0
+    }
+    
     private func setupLayer() {
         cornerRadius = 5.0
         self.layer.borderWidth = 0
         self.borderStyle = .RoundedRect
+        self.wbBlinkingAnimation = .Light
         self.borderColor = UIColor.WBColor.DeepOrange
+        
+        self.layer.masksToBounds = false
+        self.layer.shadowOffset = CGSize(width: 0.0, height: 0.0)
+        self.layer.shadowRadius = 3.0
     }
     
     public func checkEmptyText() -> Bool {
         if self.text?.stringByTrimmingCharactersInSet(NSCharacterSet.whitespaceAndNewlineCharacterSet()).isEmpty == true {
-            print("TEXT EMPTY!!!")
             animateLayer = true
             return false
         }
         
         return true
     }
+ 
+    private func setLineAnimation() {
+        self.setFadeInShadowAnimation(0.0, toValue: 0.0)
+        self.setFadeOutShadowAnimation(0.0, toValue: 0.0)
+        self.setFadeInWidthAnimation(0.0, toValue: 1.0)
+        self.setFadeOutWidthAnimation(1.0, toValue: 0.0)
+        self.setFadeInColorAnimation()
+        self.setFadeOutColorAnimation()
+    }
     
-    private func appearBorder() {
+    private func setLightAnimation() {
+        self.setFadeInShadowAnimation(0.0, toValue: 0.5)
+        self.setFadeOutShadowAnimation(0.5, toValue: 0.0)
+        self.setFadeInColorAnimation()
+        self.setFadeOutColorAnimation()
+        self.setFadeInWidthAnimation(0.0, toValue: 0.6)
+        self.setFadeOutWidthAnimation(0.6, toValue: 0.0)
+    }
+    
+    private func resetColorAnimation() {
+        self.fadeInColor.fromValue = UIColor.clearColor().CGColor
+        self.fadeInColor.toValue = self.borderColor.CGColor
+        self.fadeOutColor.fromValue = self.borderColor.CGColor
+        self.fadeOutColor.toValue = UIColor.clearColor().CGColor
+    }
+    
+    private func setFadeInShadowAnimation(fromValue: Float, toValue: Float) {
+        fadeInShadow = CABasicAnimation(keyPath: "shadowOpacity")
+        fadeInShadow.fromValue = fromValue
+        fadeInShadow.toValue = toValue
+        self.layer.shadowOpacity = toValue
+    }
+    
+    private func setFadeOutShadowAnimation(fromValue: Float, toValue: Float) {
+        fadeOutShadow = CABasicAnimation(keyPath: "shadowOpacity")
+        fadeOutShadow.fromValue = fromValue
+        fadeOutShadow.toValue = toValue
+        self.layer.shadowOpacity = toValue
+    }
+    
+    private func setFadeInColorAnimation() {
+        fadeInColor = CABasicAnimation(keyPath: "borderColor")
+        fadeInColor.fromValue = UIColor.clearColor().CGColor
+        fadeInColor.toValue = self.borderColor.CGColor
+        self.layer.borderColor = self.borderColor.CGColor
+    }
+    
+    private func setFadeOutColorAnimation() {
+        fadeOutColor = CABasicAnimation(keyPath: "borderColor")
+        fadeOutColor.fromValue = self.borderColor.CGColor
+        fadeOutColor.toValue = UIColor.clearColor().CGColor
+        self.layer.borderColor = UIColor.clearColor().CGColor
+    }
+    
+    private func setFadeInWidthAnimation(fromValue: CGFloat, toValue: CGFloat) {
+        fadeInWidth = CABasicAnimation(keyPath: "borderWidth")
+        fadeInWidth.fromValue = fromValue
+        fadeInWidth.toValue = toValue
+        self.layer.borderWidth = toValue
+    }
+    
+    private func setFadeOutWidthAnimation(fromValue: CGFloat, toValue: CGFloat) {
+        fadeOutWidth = CABasicAnimation(keyPath: "borderWidth")
+        fadeOutWidth.fromValue = fromValue
+        fadeOutWidth.toValue = toValue
+        self.layer.borderWidth = toValue
+    }
+    
+    private func appear() {
         if !animateLayer {
             return
         }
         
-        let animateColor: CABasicAnimation = CABasicAnimation(keyPath: "borderColor")
-        animateColor.fromValue = UIColor.clearColor().CGColor
-        animateColor.toValue = self.borderColor.CGColor
-        self.layer.borderColor = self.borderColor.CGColor
-        
-        let animateWidth: CABasicAnimation = CABasicAnimation(keyPath: "borderWidth")
-        animateWidth.fromValue = 0
-        animateWidth.toValue = 1
-        self.layer.borderWidth = 1
-        
-        let bothAnimation: CAAnimationGroup = CAAnimationGroup()
-        bothAnimation.duration = 1.5
-        bothAnimation.animations = [animateColor, animateWidth]
-        bothAnimation.timingFunction = CAMediaTimingFunction(name: kCAMediaTimingFunctionEaseInEaseOut)
-        bothAnimation.delegate = self
-        self.layer.addAnimation(bothAnimation, forKey: "color and Width")
+        let groupAnimation: CAAnimationGroup = CAAnimationGroup()
+        groupAnimation.duration = 1.5
+        groupAnimation.animations = [fadeInShadow, fadeInColor, fadeInWidth]
+        groupAnimation.timingFunction = CAMediaTimingFunction(name: kCAMediaTimingFunctionEaseInEaseOut)
+        groupAnimation.delegate = self
+        self.layer.addAnimation(groupAnimation, forKey: "shadow and color and width")
         showBorder = true
     }
     
-    private func disappearBorder() {
+    private func disappear() {
         if !animateLayer {
             return
         }
         
-        let fadeAnimateColor: CABasicAnimation = CABasicAnimation(keyPath: "borderColor")
-        fadeAnimateColor.fromValue = self.borderColor.CGColor
-        fadeAnimateColor.toValue = UIColor.clearColor().CGColor
-        self.layer.borderColor = UIColor.clearColor().CGColor
-        
-        let fadeAnimateWidth: CABasicAnimation = CABasicAnimation(keyPath: "borderWidth")
-        fadeAnimateWidth.fromValue = 1
-        fadeAnimateWidth.toValue = 0
-        self.layer.borderWidth = 0
-        
-        let bothFadeAnimation: CAAnimationGroup = CAAnimationGroup()
-        bothFadeAnimation.duration = 1.5
-        bothFadeAnimation.animations = [fadeAnimateColor, fadeAnimateWidth]
-        bothFadeAnimation.timingFunction = CAMediaTimingFunction(name: kCAMediaTimingFunctionEaseInEaseOut)
-        bothFadeAnimation.delegate = self
-        self.layer.addAnimation(bothFadeAnimation, forKey: "color and Width")
+        let groupAnimation: CAAnimationGroup = CAAnimationGroup()
+        groupAnimation.duration = 1.5
+        groupAnimation.animations = [fadeOutShadow, fadeOutColor, fadeOutWidth]
+        groupAnimation.timingFunction = CAMediaTimingFunction(name: kCAMediaTimingFunctionEaseInEaseOut)
+        groupAnimation.delegate = self
+        self.layer.addAnimation(groupAnimation, forKey: "shadow and color and width")
         showBorder = false
     }
     
@@ -114,9 +201,9 @@ public class WBTextField: UITextField {
         }
         
         if showBorder {
-            self.disappearBorder()
+            self.disappear()
         } else {
-            self.appearBorder()
+            self.appear()
         }
     }
     
