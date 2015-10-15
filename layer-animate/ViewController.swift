@@ -37,8 +37,9 @@ class ViewController: UIViewController, UITextFieldDelegate {
     func setItems() {
         wbTextField.layer.position = CGPoint(x: self.view.bounds.width / 2, y: self.view.bounds.height / 2 + 60)
         wbTextField.delegate = self
-        wbTextField.borderColor = UIColor.WBColor.Cyan
+//        wbTextField.borderColor = UIColor.WBColor.Cyan
         self.view.addSubview(wbTextField)
+//        self.drawShadow()
         
         let diameter = 100
         shapeLayer.strokeColor = UIColor.blueColor().CGColor
@@ -55,6 +56,124 @@ class ViewController: UIViewController, UITextFieldDelegate {
         self.view.addSubview(toggleButton)
         
         self.animateCircle()
+    }
+    
+    func drawLayerShadow() {
+        let subLayer = CALayer()
+        subLayer.frame = wbTextField.bounds
+        wbTextField.layer.addSublayer(subLayer)
+        subLayer.masksToBounds = false
+        
+        let size = subLayer.bounds.size
+        var x: CGFloat = -10.0
+        var y:CGFloat = -10.0
+        
+        let pathRef: CGMutablePathRef = CGPathCreateMutable()
+        //move initial point
+        CGPathMoveToPoint(pathRef, nil, x, y)
+        
+        // top line
+        x += size.width + 10
+        CGPathAddLineToPoint(pathRef, nil, x, y)
+        y += 10
+        CGPathAddLineToPoint(pathRef, nil, x, y)
+        x -= size.width
+        CGPathAddLineToPoint(pathRef, nil, x, y)
+        
+        //left line
+        y += size.height
+        CGPathAddLineToPoint(pathRef, nil, x, y)
+        x -= 10
+        CGPathAddLineToPoint(pathRef, nil, x, y)
+        y -= size.height
+        CGPathAddLineToPoint(pathRef, nil, x, y)
+
+        CGPathCloseSubpath(pathRef)
+        
+        subLayer.shadowOffset = CGSize(width: 2.5, height: 2.5)
+        subLayer.shadowColor = UIColor.blackColor().CGColor
+        subLayer.shadowOpacity = 1
+        subLayer.shadowPath = pathRef
+    }
+    
+    func drawShadow() {
+        let subLayer = CALayer()
+        subLayer.frame = wbTextField.bounds
+        wbTextField.layer.addSublayer(subLayer)
+        subLayer.masksToBounds = false
+        
+        let size = subLayer.bounds.size
+        var x: CGFloat = -10.0
+        var y:CGFloat = -10.0
+        
+        let pathRef: CGMutablePathRef = CGPathCreateMutable()
+        //move initial point
+        CGPathMoveToPoint(pathRef, nil, x, y)
+        
+        // top line
+        x += size.width + 10
+        CGPathAddLineToPoint(pathRef, nil, x, y)
+        y += 10
+        CGPathAddLineToPoint(pathRef, nil, x, y)
+        x -= size.width
+        CGPathAddLineToPoint(pathRef, nil, x, y)
+        
+        //left line
+        y += size.height
+        CGPathAddLineToPoint(pathRef, nil, x, y)
+        x -= 10
+        CGPathAddLineToPoint(pathRef, nil, x, y)
+        y -= size.height
+        CGPathAddLineToPoint(pathRef, nil, x, y)
+
+//        // move left bottom
+//        y += size.height
+//        x -= 10.0
+//        CGPathMoveToPoint(pathRef, nil, x, y)
+//        
+//        // bottom line
+//        x += size.width + 20.0
+//        CGPathAddLineToPoint(pathRef, nil, x, y)
+//        y -= 10.0
+//        CGPathAddLineToPoint(pathRef, nil, x, y)
+//        x -= size.width - 5
+//        CGPathAddLineToPoint(pathRef, nil, x, y)
+//        
+        CGPathCloseSubpath(pathRef)
+        
+        subLayer.shadowOffset = CGSize(width: 2.5, height: 2.5)
+        subLayer.shadowColor = UIColor.blackColor().CGColor
+        subLayer.shadowOpacity = 1
+        subLayer.shadowPath = pathRef
+        
+//        let rightButtomLayer = CALayer()
+//        rightButtomLayer.frame = wbTextField.bounds
+//        wbTextField.layer.addSublayer(rightButtomLayer)
+//        rightButtomLayer.masksToBounds = false
+//        
+//        let rightButtomSize = rightButtomLayer.bounds.size
+//        let rightButtomX: CGFloat = rightButtomSize.width + 10.0
+//        let rightButtomY:CGFloat = rightButtomSize.height + 10.0
+//        
+//        let rightButtomPathRef: CGMutablePathRef = CGPathCreateMutable()
+//        //move initial point
+//        CGPathMoveToPoint(rightButtomPathRef, nil, rightButtomX, rightButtomY)
+//        
+//        // Right line
+//        x -= rightButtomSize.width - 10.0
+//        CGPathAddLineToPoint(rightButtomPathRef, nil, rightButtomX, rightButtomY)
+//        y -= 10
+//        CGPathAddLineToPoint(rightButtomPathRef, nil, rightButtomX, rightButtomY)
+//        x += rightButtomSize.width
+//        CGPathAddLineToPoint(rightButtomPathRef, nil, rightButtomX, rightButtomY)
+//        
+//        CGPathCloseSubpath(rightButtomPathRef)
+//        
+//        rightButtomLayer.shadowOffset = CGSize(width: 2.5, height: 2.5)
+//        rightButtomLayer.shadowColor = UIColor.yellowColor().CGColor
+//        rightButtomLayer.shadowOpacity = 1
+//        rightButtomLayer.shadowPath = rightButtomPathRef
+        
     }
     
     func animateCircle() {

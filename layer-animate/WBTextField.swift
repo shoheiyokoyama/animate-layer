@@ -13,6 +13,11 @@ public enum WBBlinkingAnimation {
     case Light
 }
 
+public enum WBBorderStyle {
+    case RoundedRect
+    case None
+}
+
 public class WBTextField: UITextField {
     
     private var showBorder = Bool()
@@ -30,6 +35,14 @@ public class WBTextField: UITextField {
             self.resetColorAnimation()
         }
     }
+    
+    public var animationDuration: CFTimeInterval = 3.0 {
+        didSet {
+            
+        }
+    }
+    
+    
     
     public var stopAnimationByTextEditing = true
     
@@ -52,10 +65,20 @@ public class WBTextField: UITextField {
                 self.setLineAnimation()
             case .Light:
                 self.setLightAnimation()
-            default:
-                break
             }
             
+        }
+    }
+    
+    public var wbBorderStyle: WBBorderStyle = .RoundedRect {
+        didSet {
+            switch wbBorderStyle {
+            case .RoundedRect:
+                self.borderStyle = .RoundedRect
+            case .None:
+                self.layer.backgroundColor = UIColor.whiteColor().CGColor
+                self.borderStyle = .None
+            }
         }
     }
     
@@ -81,10 +104,14 @@ public class WBTextField: UITextField {
     
     private func setupLayer() {
         cornerRadius = 5.0
+        
+        self.wbBorderStyle = .None
+        
         self.layer.borderWidth = 0
-        self.borderStyle = .RoundedRect
+        
         self.wbBlinkingAnimation = .Light
         self.borderColor = UIColor.WBColor.DeepOrange
+        self.animationDuration = 3.0
         
         self.layer.masksToBounds = false
         self.layer.shadowOffset = CGSize(width: 0.0, height: 0.0)
@@ -129,6 +156,7 @@ public class WBTextField: UITextField {
         fadeInShadow = CABasicAnimation(keyPath: "shadowOpacity")
         fadeInShadow.fromValue = fromValue
         fadeInShadow.toValue = toValue
+        fadeInShadow.autoreverses = true
         self.layer.shadowOpacity = toValue
     }
     
@@ -143,6 +171,7 @@ public class WBTextField: UITextField {
         fadeInColor = CABasicAnimation(keyPath: "borderColor")
         fadeInColor.fromValue = UIColor.clearColor().CGColor
         fadeInColor.toValue = self.borderColor.CGColor
+        fadeInColor.autoreverses = true
         self.layer.borderColor = self.borderColor.CGColor
     }
     
@@ -157,6 +186,7 @@ public class WBTextField: UITextField {
         fadeInWidth = CABasicAnimation(keyPath: "borderWidth")
         fadeInWidth.fromValue = fromValue
         fadeInWidth.toValue = toValue
+        fadeInWidth.autoreverses = true
         self.layer.borderWidth = toValue
     }
     
@@ -173,10 +203,12 @@ public class WBTextField: UITextField {
         }
         
         let groupAnimation: CAAnimationGroup = CAAnimationGroup()
-        groupAnimation.duration = 1.5
+        groupAnimation.duration = self.animationDuration / 2
         groupAnimation.animations = [fadeInShadow, fadeInColor, fadeInWidth]
         groupAnimation.timingFunction = CAMediaTimingFunction(name: kCAMediaTimingFunctionEaseInEaseOut)
         groupAnimation.delegate = self
+        groupAnimation.autoreverses = true
+        groupAnimation.repeatCount = 5
         self.layer.addAnimation(groupAnimation, forKey: "shadow and color and width")
         showBorder = true
     }
@@ -187,7 +219,7 @@ public class WBTextField: UITextField {
         }
         
         let groupAnimation: CAAnimationGroup = CAAnimationGroup()
-        groupAnimation.duration = 1.5
+        groupAnimation.duration = self.animationDuration / 2
         groupAnimation.animations = [fadeOutShadow, fadeOutColor, fadeOutWidth]
         groupAnimation.timingFunction = CAMediaTimingFunction(name: kCAMediaTimingFunctionEaseInEaseOut)
         groupAnimation.delegate = self
@@ -195,17 +227,17 @@ public class WBTextField: UITextField {
         showBorder = false
     }
     
-    override public func animationDidStop(anim: CAAnimation, finished flag: Bool) {
-        if !flag {
-            return
-        }
-        
-        if showBorder {
-            self.disappear()
-        } else {
-            self.appear()
-        }
-    }
+//    override public func animationDidStop(anim: CAAnimation, finished flag: Bool) {
+//        if !flag {
+//            return
+//        }
+//        
+//        if showBorder {
+//            self.disappear()
+//        } else {
+//            self.appear()
+//        }
+//    }
     
     override public func beginTrackingWithTouch(touch: UITouch, withEvent event: UIEvent?) -> Bool {
         if stopAnimationByTextEditing && animateLayer {
