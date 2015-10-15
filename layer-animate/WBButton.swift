@@ -8,22 +8,57 @@
 
 import UIKit
 
+public enum WBButtonBlinkingAnimation {
+    case Line
+    case Light
+    case Background
+    case LightBackground
+    case Text
+}
+
 public class WBButton: UIButton {
     
-    private var showBorder = Bool()
+    private var blingShadow = CABasicAnimation()
+    private var blingColor = CABasicAnimation()
+    private var blingBackgroundColorAnimation = CABasicAnimation()
+    private var blingWidth = CABasicAnimation()
     
-    public var borderColor: UIColor = UIColor()
+    public var borderColor: UIColor = UIColor.WBColor.DeepOrange {
+        didSet {
+            self.layer.shadowColor = borderColor.CGColor
+        }
+    }
+    
+    public var blingBackgroundColor = UIColor.WBColor.DeepOrange
+    
+    public var animationDuration: CFTimeInterval = 3.0
     
     public var animateLayer = false {
         didSet {
             if animateLayer {
-                self.appearBorder()
+                self.startAnimation()
             } else {
-                self.showBorder = false
                 self.layer.removeAllAnimations()
+                self.clearLayer()
                 
-                self.layer.borderColor = UIColor.clearColor().CGColor
-                self.layer.borderWidth = 0
+            }
+        }
+    }
+    
+    public var wbButtonBlinkingAnimation: WBButtonBlinkingAnimation = .Line {
+        didSet {
+            switch wbButtonBlinkingAnimation {
+            case .Line:
+                self.setLineAnimation()
+            case .Light:
+                self.layer.backgroundColor = UIColor.whiteColor().CGColor
+                self.setLightAnimation()
+            case .Background:
+                self.setBackgroundAnimation()
+            case .LightBackground:
+                self.setLightBackgroundAnimation()
+            case .Text:
+                self.setTextAnimation()
             }
         }
     }
@@ -45,69 +80,114 @@ public class WBButton: UIButton {
     
     private func setupLayer() {
         cornerRadius = 5.0
-        self.layer.borderWidth = 0
-        self.borderColor = UIColor.WBColor.LightGreen
+        
         self.contentEdgeInsets = UIEdgeInsets(top: 5.0, left: 5.0, bottom: 5.0, right: 5.0)
+        self.wbButtonBlinkingAnimation = .Text
+        
+        self.layer.masksToBounds = false
+        self.layer.shadowOffset = CGSize(width: 0.0, height: 0.0)
+        
+        self.clearLayer()
+        
+        self.borderColor = UIColor.WBColor.DeepOrange
     }
     
-    private func appearBorder() {
+    private func setLightShadow() {
+        self.layer.shadowRadius = 3.0
+    }
+    
+    private func setLightBackgroundShadow() {
+        self.layer.shadowRadius = 7.0
+    }
+    
+    private func setShadow() {
+        switch wbButtonBlinkingAnimation {
+        case .Light:
+            self.setLightShadow()
+        case .LightBackground:
+            self.setLightBackgroundShadow()
+        default:
+            return
+        }
+    }
+    
+    private func clearLayer() {
+        self.layer.borderColor = UIColor.clearColor().CGColor
+        self.layer.borderWidth = 0
+        self.layer.shadowRadius = 0.0
+    }
+    
+    private func setLineAnimation() {
+        self.setBlingColor()
+        self.setBlingWidth(0.0, toValue: 1.0)
+    }
+    
+    private func setTextAnimation() {
+        
+    }
+    
+    private func setLightAnimation() {
+        self.setBlingColor()
+        self.setBlingShadow(0.0, toValue: 0.5)
+        self.setBlingWidth(0.0, toValue: 0.6)
+    }
+    
+    private func setBackgroundAnimation() {
+        self.setBackgroundColor()
+    }
+    
+    private func setLightBackgroundAnimation() {
+        self.setBlingShadow(0.0, toValue: 1.0)
+        self.setBackgroundColor()
+    }
+    
+    private func setBackgroundColor() {
+        blingBackgroundColorAnimation = CABasicAnimation(keyPath: "backgroundColor")
+        blingBackgroundColorAnimation.fromValue = UIColor.clearColor().CGColor
+        blingBackgroundColorAnimation.toValue = self.blingBackgroundColor.CGColor
+        blingBackgroundColorAnimation.autoreverses = true
+        self.layer.borderColor = self.blingBackgroundColor.CGColor
+    }
+    
+    private func setTextColor() {
+
+    }
+    
+    private func setBlingColor() {
+        blingColor = CABasicAnimation(keyPath: "borderColor")
+        blingColor.fromValue = UIColor.clearColor().CGColor
+        blingColor.toValue = self.borderColor.CGColor
+        self.layer.borderColor = self.borderColor.CGColor
+    }
+    
+    private func setBlingShadow(fromValue: Float, toValue: Float) {
+        blingShadow = CABasicAnimation(keyPath: "shadowOpacity")
+        blingShadow.fromValue = fromValue
+        blingShadow.toValue = toValue
+        self.layer.shadowOpacity = toValue
+    }
+    
+    private func setBlingWidth(fromValue: CGFloat, toValue: CGFloat) {
+        blingWidth = CABasicAnimation(keyPath: "borderWidth")
+        blingWidth.fromValue = fromValue
+        blingWidth.toValue = toValue
+        self.layer.borderWidth = toValue
+    }
+    
+    private func startAnimation() {
         if !animateLayer {
             return
         }
         
-        let animateColor: CABasicAnimation = CABasicAnimation(keyPath: "borderColor")
-        animateColor.fromValue = UIColor.clearColor().CGColor
-        animateColor.toValue = self.borderColor.CGColor
-        self.layer.borderColor = self.borderColor.CGColor
-        
-        let animateWidth: CABasicAnimation = CABasicAnimation(keyPath: "borderWidth")
-        animateWidth.fromValue = 0
-        animateWidth.toValue = 1
-        self.layer.borderWidth = 1
+        self.setShadow()
         
         let bothAnimation: CAAnimationGroup = CAAnimationGroup()
-        bothAnimation.duration = 1.5
-        bothAnimation.animations = [animateColor, animateWidth]
+        bothAnimation.duration = self.animationDuration / 2
+        bothAnimation.animations = [blingColor, blingShadow, blingWidth, blingBackgroundColorAnimation]
         bothAnimation.timingFunction = CAMediaTimingFunction(name: kCAMediaTimingFunctionEaseInEaseOut)
         bothAnimation.delegate = self
-        self.layer.addAnimation(bothAnimation, forKey: "color and Width")
-        showBorder = true
+        bothAnimation.autoreverses = true
+        bothAnimation.repeatCount = 1e100
+        self.layer.addAnimation(bothAnimation, forKey: "color and width and shadow")
     }
-    
-    private func disappearBorder() {
-        if !animateLayer {
-            return
-        }
-        
-        let fadeAnimateColor: CABasicAnimation = CABasicAnimation(keyPath: "borderColor")
-        fadeAnimateColor.fromValue = self.borderColor.CGColor
-        fadeAnimateColor.toValue = UIColor.clearColor().CGColor
-        self.layer.borderColor = UIColor.clearColor().CGColor
-        
-        let fadeAnimateWidth: CABasicAnimation = CABasicAnimation(keyPath: "borderWidth")
-        fadeAnimateWidth.fromValue = 1
-        fadeAnimateWidth.toValue = 0
-        self.layer.borderWidth = 0
-        
-        let bothFadeAnimation: CAAnimationGroup = CAAnimationGroup()
-        bothFadeAnimation.duration = 1.5
-        bothFadeAnimation.animations = [fadeAnimateColor, fadeAnimateWidth]
-        bothFadeAnimation.timingFunction = CAMediaTimingFunction(name: kCAMediaTimingFunctionEaseInEaseOut)
-        bothFadeAnimation.delegate = self
-        self.layer.addAnimation(bothFadeAnimation, forKey: "color and Width")
-        showBorder = false
-    }
-    
-    override public func animationDidStop(anim: CAAnimation, finished flag: Bool) {
-        if !flag {
-            return
-        }
-        
-        if showBorder {
-            self.disappearBorder()
-        } else {
-            self.appearBorder()
-        }
-    }
-
 }

@@ -112,7 +112,7 @@ public class WBTextField: UITextField {
         self.layer.borderWidth = 0
         
         self.wbBlinkingAnimation = .Light
-        self.borderColor = UIColor.WBColor.DeepOrange
+//        self.borderColor = UIColor.WBColor.DeepOrange
         self.animationDuration = 3.0
         
         self.layer.masksToBounds = false
@@ -185,7 +185,7 @@ public class WBTextField: UITextField {
         groupAnimation.timingFunction = CAMediaTimingFunction(name: kCAMediaTimingFunctionEaseInEaseOut)
         groupAnimation.delegate = self
         groupAnimation.autoreverses = true
-        groupAnimation.repeatCount = 5
+        groupAnimation.repeatCount = 1e100
         self.layer.addAnimation(groupAnimation, forKey: "shadow and color and width")
         showBorder = true
     }

@@ -37,7 +37,7 @@ class ViewController: UIViewController, UITextFieldDelegate {
     func setItems() {
         wbTextField.layer.position = CGPoint(x: self.view.bounds.width / 2, y: self.view.bounds.height / 2 + 60)
         wbTextField.delegate = self
-//        wbTextField.borderColor = UIColor.WBColor.Cyan
+        wbTextField.borderColor = UIColor.WBColor.Cyan
         self.view.addSubview(wbTextField)
 //        self.drawShadow()
         
@@ -52,7 +52,9 @@ class ViewController: UIViewController, UITextFieldDelegate {
         toggleButton.setTitleColor(UIColor.blackColor(), forState: .Normal)
         toggleButton.addTarget(self, action: "onClickMyButton:", forControlEvents: .TouchUpInside)
         toggleButton.sizeToFit()
+//        toggleButton.borderColor = UIColor.WBColor.Cyan
         toggleButton.animateLayer = false
+        toggleButton.animationDuration = 1.4
         self.view.addSubview(toggleButton)
         
         self.animateCircle()
@@ -204,6 +206,12 @@ class ViewController: UIViewController, UITextFieldDelegate {
            wbTextField.animateLayer = false
         } else {
             wbTextField.animateLayer = true
+        }
+        
+        if toggleButton.animateLayer {
+            toggleButton.animateLayer = false
+        } else {
+            toggleButton.animateLayer = true
         }
     }
 
