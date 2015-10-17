@@ -150,7 +150,7 @@ public class WBButton: UIButton {
     }
     
     private func setTextColor() {
-
+        
     }
     
     private func setBlingColor() {
