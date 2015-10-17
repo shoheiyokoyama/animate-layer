@@ -13,6 +13,9 @@ class ViewController: UIViewController, UITextFieldDelegate {
 
     var wbTextField = WBTextField(frame: CGRectMake(0, 0, 200, 30))
     let toggleButton = WBButton(frame: CGRectMake(100, 450, 100, 30))
+    let label = UILabel(frame: CGRectMake(100, 500, 100, 30))
+//    let label = UILabel(frame: CGRectMake(0, 0, 320, 160))
+//    let label = UILabel(frame: CGRectMake(0, 300, 320, 160))
     let shapeLayer = CAShapeLayer()
     
     override func viewDidLoad() {
@@ -57,7 +60,52 @@ class ViewController: UIViewController, UITextFieldDelegate {
         toggleButton.animationDuration = 1.4
         self.view.addSubview(toggleButton)
         
-        self.animateCircle()
+        label.text = "TEST"
+        label.textAlignment = NSTextAlignment.Center
+        label.backgroundColor = UIColor.clearColor()
+        label.sizeToFit()
+        self.view.addSubview(label)
+        self.textAnimate(label)
+        
+//        self.animateCircle()
+        
+        
+    }
+    
+    func textAnimate(label: UILabel) {
+        let backgroundVeiw = UIView()
+        backgroundVeiw.frame = label.frame
+        
+        self.viewAnimate(backgroundVeiw)
+        
+        backgroundVeiw.layer.mask = label.layer
+        label.frame = CGRectMake(0, 0, label.frame.width, label.frame.height)
+        
+        self.view.addSubview(backgroundVeiw)
+    }
+    
+    private func viewAnimate(view: UIView) {
+        let beginColor = UIColor.redColor()
+        let endColor =  UIColor.blueColor()
+        
+        let animation = CABasicAnimation(keyPath: "backgroundColor")
+        animation.duration = 2.0
+        animation.autoreverses = true
+        animation.repeatCount = 100
+        animation.toValue = beginColor.CGColor
+        animation.fromValue = endColor.CGColor
+        view.layer.addAnimation(animation, forKey: "nil")
+    }
+    
+    private func imageFromView(view: UIView) -> UIImage {
+        UIGraphicsBeginImageContextWithOptions(view.frame.size, true, 0)
+        let context: CGContextRef = UIGraphicsGetCurrentContext()!
+        CGContextTranslateCTM(context, -view.frame.origin.x, -view.frame.origin.y)
+        view.layer.renderInContext(context)
+        
+        let renderedImage:UIImage = UIGraphicsGetImageFromCurrentImageContext()
+        UIGraphicsEndImageContext()
+        return renderedImage
     }
     
     func drawLayerShadow() {
