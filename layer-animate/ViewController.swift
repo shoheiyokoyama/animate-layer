@@ -14,8 +14,6 @@ class ViewController: UIViewController, UITextFieldDelegate {
     var wbTextField = WBTextField(frame: CGRectMake(0, 0, 200, 30))
     let toggleButton = WBButton(frame: CGRectMake(100, 450, 100, 30))
     let label = UILabel(frame: CGRectMake(100, 500, 100, 30))
-//    let label = UILabel(frame: CGRectMake(0, 0, 320, 160))
-//    let label = UILabel(frame: CGRectMake(0, 300, 320, 160))
     let shapeLayer = CAShapeLayer()
     
     override func viewDidLoad() {
@@ -55,21 +53,21 @@ class ViewController: UIViewController, UITextFieldDelegate {
         toggleButton.setTitleColor(UIColor.blackColor(), forState: .Normal)
         toggleButton.addTarget(self, action: "onClickMyButton:", forControlEvents: .TouchUpInside)
         toggleButton.sizeToFit()
-//        toggleButton.borderColor = UIColor.WBColor.Cyan
+        toggleButton.borderColor = UIColor.WBColor.Cyan
         toggleButton.animateLayer = false
         toggleButton.animationDuration = 1.4
         self.view.addSubview(toggleButton)
         
         label.text = "TEST"
+        label.textColor = UIColor.blackColor()
+        
         label.textAlignment = NSTextAlignment.Center
         label.backgroundColor = UIColor.clearColor()
         label.sizeToFit()
         self.view.addSubview(label)
         self.textAnimate(label)
         
-//        self.animateCircle()
-        
-        
+        self.animateCircle()
     }
     
     func textAnimate(label: UILabel) {
@@ -103,7 +101,7 @@ class ViewController: UIViewController, UITextFieldDelegate {
         CGContextTranslateCTM(context, -view.frame.origin.x, -view.frame.origin.y)
         view.layer.renderInContext(context)
         
-        let renderedImage:UIImage = UIGraphicsGetImageFromCurrentImageContext()
+        let renderedImage: UIImage = UIGraphicsGetImageFromCurrentImageContext()
         UIGraphicsEndImageContext()
         return renderedImage
     }
