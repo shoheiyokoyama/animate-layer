@@ -15,6 +15,11 @@ class ViewController: UIViewController, UITextFieldDelegate {
     let toggleButton = WBButton(frame: CGRectMake(100, 450, 100, 30))
     let label = UILabel(frame: CGRectMake(100, 500, 100, 30))
     let shapeLayer = CAShapeLayer()
+    let backgroundView = UIView()
+    var textColorAnimation = CABasicAnimation()
+    var isAnimateTextColor = true
+    var originX: CGFloat = 100
+    var originY: CGFloat = 500
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -53,46 +58,66 @@ class ViewController: UIViewController, UITextFieldDelegate {
         toggleButton.setTitleColor(UIColor.blackColor(), forState: .Normal)
         toggleButton.addTarget(self, action: "onClickMyButton:", forControlEvents: .TouchUpInside)
         toggleButton.sizeToFit()
-        toggleButton.borderColor = UIColor.WBColor.Cyan
+//        toggleButton.borderColor = UIColor.WBColor.Cyan
         toggleButton.animateLayer = false
         toggleButton.animationDuration = 1.4
         self.view.addSubview(toggleButton)
+        self.view.addSubview(toggleButton.wbView)
         
         label.text = "TEST"
         label.textColor = UIColor.blackColor()
-        
         label.textAlignment = NSTextAlignment.Center
-        label.backgroundColor = UIColor.clearColor()
         label.sizeToFit()
         self.view.addSubview(label)
         self.textAnimate(label)
+//        self.textAnimateWithUIView()
         
         self.animateCircle()
     }
     
     func textAnimate(label: UILabel) {
-        let backgroundVeiw = UIView()
-        backgroundVeiw.frame = label.frame
+        backgroundView.frame = label.frame
         
-        self.viewAnimate(backgroundVeiw)
+        self.viewAnimate()
         
-        backgroundVeiw.layer.mask = label.layer
-        label.frame = CGRectMake(0, 0, label.frame.width, label.frame.height)
+        backgroundView.layer.mask = label.layer
+        backgroundView.layer.mask!.position = CGPointMake(label.frame.width / 2, label.frame.height / 2)
         
-        self.view.addSubview(backgroundVeiw)
+        self.view.addSubview(backgroundView)
     }
     
-    private func viewAnimate(view: UIView) {
+    func textAnimateWithUIView() {
+        UIView.animateKeyframesWithDuration(2.0,
+            delay: 0.0,
+            options: .Repeat,
+            animations: { () -> Void in
+                
+//                 2.0 * 0.4秒かけて
+                UIView.addKeyframeWithRelativeStartTime(0.0
+                    , relativeDuration: 0.4, animations: { () -> Void in
+                        self.view.backgroundColor = UIColor.redColor()
+                })
+                
+                //0.4秒後に2.0*0.6かけて
+                UIView.addKeyframeWithRelativeStartTime(0.4
+                    , relativeDuration: 0.6, animations: { () -> Void in
+                        self.view.backgroundColor = UIColor.blueColor()
+                })
+            }, completion: nil)
+    }
+    
+    private func viewAnimate() {
         let beginColor = UIColor.redColor()
         let endColor =  UIColor.blueColor()
         
-        let animation = CABasicAnimation(keyPath: "backgroundColor")
-        animation.duration = 2.0
-        animation.autoreverses = true
-        animation.repeatCount = 100
-        animation.toValue = beginColor.CGColor
-        animation.fromValue = endColor.CGColor
-        view.layer.addAnimation(animation, forKey: "nil")
+        textColorAnimation = CABasicAnimation(keyPath: "backgroundColor")
+        textColorAnimation.duration = 2.0
+//        textColorAnimation.removedOnCompletion = false
+        textColorAnimation.autoreverses = true
+        textColorAnimation.repeatCount = 100
+        textColorAnimation.toValue = beginColor.CGColor
+        textColorAnimation.fromValue = endColor.CGColor
+        backgroundView.layer.addAnimation(textColorAnimation, forKey: "mask")
     }
     
     private func imageFromView(view: UIView) -> UIImage {
