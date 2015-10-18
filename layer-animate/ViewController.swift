@@ -66,17 +66,18 @@ class ViewController: UIViewController, UITextFieldDelegate {
         
         label.text = "TEST"
         label.textColor = UIColor.blackColor()
+        
         label.textAlignment = NSTextAlignment.Center
         label.sizeToFit()
         self.view.addSubview(label)
         self.textAnimate(label)
-//        self.textAnimateWithUIView()
         
         self.animateCircle()
     }
     
     func textAnimate(label: UILabel) {
         backgroundView.frame = label.frame
+        backgroundView.backgroundColor = UIColor.blackColor()
         
         self.viewAnimate()
         
@@ -107,16 +108,16 @@ class ViewController: UIViewController, UITextFieldDelegate {
     }
     
     private func viewAnimate() {
-        let beginColor = UIColor.redColor()
-        let endColor =  UIColor.blueColor()
+        let beginColor = UIColor.clearColor()
+        let endColor =  UIColor.blackColor()//textcolor
         
         textColorAnimation = CABasicAnimation(keyPath: "backgroundColor")
         textColorAnimation.duration = 2.0
 //        textColorAnimation.removedOnCompletion = false
         textColorAnimation.autoreverses = true
         textColorAnimation.repeatCount = 100
-        textColorAnimation.toValue = beginColor.CGColor
-        textColorAnimation.fromValue = endColor.CGColor
+        textColorAnimation.toValue = endColor.CGColor
+        textColorAnimation.fromValue = beginColor.CGColor
         backgroundView.layer.addAnimation(textColorAnimation, forKey: "mask")
     }
     
@@ -284,6 +285,34 @@ class ViewController: UIViewController, UITextFieldDelegate {
         } else {
             toggleButton.animateLayer = true
         }
+        
+        if isAnimateTextColor {
+            self.pauseAction()
+            isAnimateTextColor = false
+        } else {
+            isAnimateTextColor = true
+            self.restartAction()
+        }
+    }
+    
+    private func pauseAction() {
+//        let pausedTime = backgroundView.layer.convertTime(CACurrentMediaTime(), fromLayer: nil)
+//        backgroundView.layer.speed = 0.0
+//        backgroundView.layer.timeOffset = pausedTime
+        backgroundView.layer.removeAnimationForKey("mask")
+    }
+    
+    private func restartAction() {
+//        let pausedTime: CFTimeInterval = backgroundView.layer.timeOffset
+//        backgroundView.layer.speed = 1.0
+//        backgroundView.layer.timeOffset = 0.0
+//        let timeSincePause: CFTimeInterval = label.layer.convertTime(CACurrentMediaTime(), fromLayer: nil) - pausedTime
+//        backgroundView.layer.beginTime = timeSincePause
+        self.viewAnimate()
+    }
+    
+    override func animationDidStop(anim: CAAnimation, finished flag: Bool) {
+        //
     }
 
 }

@@ -28,6 +28,7 @@ public class WBButton: UIButton {
         didSet {
             self.layer.shadowColor = borderColor.CGColor
             self.resetBlingColor()
+            self.layer
         }
     }
     
