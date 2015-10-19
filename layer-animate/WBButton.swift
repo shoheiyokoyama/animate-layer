@@ -52,17 +52,27 @@ public class WBButton: UIButton {
     public var wbView: UIView = UIView()
     
     public var textAnimtion = false
+    private var isCallTextAnimation = false
     
     public var animateLayer = false {
         didSet {
             if animateLayer {
-                self.textAnimtion ? self.setTextAnimation() : self.startAnimation()
 //                self.startAnimation()
+                if textAnimtion {
+                    isCallTextAnimation ? self.setTextColor() : self.setTextAnimation()
+
+                } else {
+                    self.startAnimation()
+                }
                 
             } else {
-                self.textAnimtion ? self.wbView.layer.removeAllAnimations() : self.layer.removeAllAnimations()
+                if textAnimtion {
+                    isCallTextAnimation ? self.stopTextAnimation() : print("hi")
+                } else {
+                    self.layer.removeAllAnimations()
+                    self.clearLayer()
+                }
                 
-                self.textAnimtion ? self.clearTextColor() : self.clearLayer()
 //                self.layer.removeAllAnimations()
 //                self.clearLayer()
                 
@@ -84,7 +94,6 @@ public class WBButton: UIButton {
                 self.setLightBackgroundAnimation()
             case .Text:
                 self.textAnimtion = true
-//                self.setTextAnimation()
             }
         }
     }
@@ -108,15 +117,18 @@ public class WBButton: UIButton {
         cornerRadius = 5.0
         
         self.contentEdgeInsets = UIEdgeInsets(top: 5.0, left: 5.0, bottom: 5.0, right: 5.0)
-        self.wbButtonBlinkingAnimation = .LightBackground
         
-        self.layer.masksToBounds = false
+        self.backgroundColor = UIColor.clearColor()
+//        self.layer.masksTosBounds = false
         self.layer.shadowOffset = CGSize(width: 0.0, height: 0.0)
         self.layer.shadowColor = self.blingShadowColor.CGColor
         
-        self.wbView.frame = self.frame
+        
+        print(self.frame)
         self.wbView.userInteractionEnabled = false
-        self.wbView.backgroundColor = UIColor.clearColor()
+//        self.wbView.backgroundColor = UIColor.blackColor()
+        
+        self.wbButtonBlinkingAnimation = .Text
         
         self.blingBackgroundColor = UIColor.yellowColor()
         
@@ -150,8 +162,8 @@ public class WBButton: UIButton {
     }
     
     private func clearTextColor() {
-        self.wbView.layer.mask = nil
-        self.frame = CGRectMake(100, 450, self.frame.width, self.frame.height)
+//        self.wbView.layer.mask = nil
+//        self.frame = CGRectMake(100, 450, self.frame.width, self.frame.height)
     }
     
     private func setLineAnimation() {
@@ -159,11 +171,20 @@ public class WBButton: UIButton {
         self.setBlingWidth(0.0, toValue: 1.0)
     }
     
+    private func stopTextAnimation() {
+        self.wbView.layer.removeAnimationForKey("mask")
+    }
+    
     private func setTextAnimation() {
+        isCallTextAnimation = true
+        self.wbView.frame = self.frame
+        self.wbView.backgroundColor = UIColor.blackColor()
         self.setTextColor()
         self.wbView.layer.mask = self.layer
-
-        self.frame = CGRectMake(0, 0, self.frame.width, self.frame.height)
+        
+        print(self.frame)
+        self.wbView.layer.mask!.position = CGPointMake(self.frame.width / 2, self.frame.height / 2)
+        print(self.frame)
     }
     
     private func setLightAnimation() {
@@ -192,11 +213,11 @@ public class WBButton: UIButton {
     private func setTextColor() {
         blingTextColorAnimation = CABasicAnimation(keyPath: "backgroundColor")
         blingTextColorAnimation.duration = animationDuration
-        blingTextColorAnimation.toValue = UIColor.clearColor().CGColor
-        blingTextColorAnimation.fromValue = self.blingTextColor.CGColor
+        blingTextColorAnimation.toValue = UIColor.blackColor().CGColor
+        blingTextColorAnimation.fromValue = UIColor.clearColor().CGColor
         blingTextColorAnimation.autoreverses = true
         blingTextColorAnimation.repeatCount = 1e100
-        self.wbView.layer.addAnimation(blingTextColorAnimation, forKey: "nil")
+        self.wbView.layer.addAnimation(blingTextColorAnimation, forKey: "mask")
     }
     
     private func setBlingColor() {

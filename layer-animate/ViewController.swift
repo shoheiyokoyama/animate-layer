@@ -54,10 +54,11 @@ class ViewController: UIViewController, UITextFieldDelegate {
         shapeLayer.path = UIBezierPath(ovalInRect: CGRect(x: 100, y: 100, width: diameter, height: diameter)).CGPath
         self.view.layer.addSublayer(shapeLayer)
         
-        toggleButton.setTitle("Check TEXT", forState: .Normal)
+        toggleButton.setTitle("TEXT", forState: .Normal)
         toggleButton.setTitleColor(UIColor.blackColor(), forState: .Normal)
         toggleButton.addTarget(self, action: "onClickMyButton:", forControlEvents: .TouchUpInside)
-        toggleButton.sizeToFit()
+//        toggleButton.sizeToFit()
+        toggleButton.backgroundColor = UIColor.clearColor()
 //        toggleButton.borderColor = UIColor.WBColor.Cyan
         toggleButton.animateLayer = false
         toggleButton.animationDuration = 1.4
@@ -70,13 +71,16 @@ class ViewController: UIViewController, UITextFieldDelegate {
         label.textAlignment = NSTextAlignment.Center
         label.sizeToFit()
         self.view.addSubview(label)
-        self.textAnimate(label)
+        
+//        self.textAnimate(label)
         
         self.animateCircle()
+        
     }
     
     func textAnimate(label: UILabel) {
         backgroundView.frame = label.frame
+        backgroundView.userInteractionEnabled = false
         backgroundView.backgroundColor = UIColor.blackColor()
         
         self.viewAnimate()
