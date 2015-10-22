@@ -13,7 +13,7 @@ class ViewController: UIViewController, UITextFieldDelegate {
 
     var wbTextField = WBTextField(frame: CGRectMake(0, 0, 200, 30))
     let toggleButton = WBButton(frame: CGRectMake(100, 450, 100, 30))
-    let label = UILabel(frame: CGRectMake(100, 500, 100, 30))
+    let label = UILabel(frame: CGRectMake(100, 200, 100, 120))
     let shapeLayer = CAShapeLayer()
     let backgroundView = UIView()
     var textColorAnimation = CABasicAnimation()
@@ -63,19 +63,75 @@ class ViewController: UIViewController, UITextFieldDelegate {
         toggleButton.animateLayer = false
         toggleButton.animationDuration = 1.4
         self.view.addSubview(toggleButton)
-        self.view.addSubview(toggleButton.wbView)
+//        self.view.addSubview(toggleButton.wbView)
         
-        label.text = "TEST"
-        label.textColor = UIColor.blackColor()
+        label.text = "Taaaasssssss"
+        label.textColor = UIColor.yellowColor()
+//        label.backgroundColor = UIColor.redColor()
+        label.font = UIFont.systemFontOfSize(20.0)
         
         label.textAlignment = NSTextAlignment.Center
         label.sizeToFit()
         self.view.addSubview(label)
+        label.layer.borderColor = UIColor.redColor().CGColor
+        label.layer.borderWidth = 1.0
+        print(label.font)
         
 //        self.textAnimate(label)
         
         self.animateCircle()
+        self.textLayerTest(label.text!)
         
+    }
+    
+    private func textLayerTest(text: NSString) {
+        
+        let font = UIFont.systemFontOfSize(20.0)
+        let text = text
+        
+        
+        var attributes = [String: AnyObject]()
+        attributes[NSFontAttributeName] = font
+        let size = text.sizeWithAttributes(attributes)
+        
+        
+        let x = (CGRectGetWidth(label.frame) - size.width) / 2
+        let y = (CGRectGetHeight(label.frame) - size.height) / 2
+        let height = size.height + label.layer.borderWidth
+        let width = size.width
+        let frame = CGRectMake(x, y, width, height)
+        print(frame)
+        
+        let textLayer = CATextLayer()
+        textLayer.font = label.font
+        textLayer.string = text
+        textLayer.fontSize = font.pointSize
+        
+
+        textLayer.foregroundColor = UIColor.blackColor().CGColor
+//        textLayer.backgroundColor = UIColor.blueColor().CGColor
+        textLayer.contentsScale = UIScreen.mainScreen().scale
+        
+        textLayer.frame = frame
+        textLayer.alignmentMode = kCAAlignmentCenter
+        
+        textLayer.cornerRadius = 5.0
+        self.label.layer.addSublayer(textLayer)
+//        self.animationTest(textLayer)
+    }
+    
+    private func animationTest(layer: CATextLayer) {
+//        let anm = CABasicAnimation(keyPath: "borderColor")
+//        let anm = CABasicAnimation(keyPath: "backgroundColor")
+        let anm = CABasicAnimation(keyPath: "borderWidth")
+        anm.duration = 2.0
+        anm.autoreverses = true
+        anm.repeatCount = 100
+//        anm.toValue = UIColor.redColor().CGColor
+//        anm.fromValue = UIColor.clearColor().CGColor
+        anm.toValue = 1
+        anm.fromValue = 0
+        layer.addAnimation(anm, forKey: nil)
     }
     
     func textAnimate(label: UILabel) {
