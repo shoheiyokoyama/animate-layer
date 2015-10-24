@@ -76,7 +76,7 @@ public class WBButton: UIButton {
         
         self.contentEdgeInsets = UIEdgeInsets(top: 5.0, left: 5.0, bottom: 5.0, right: 5.0)
         
-        self.wbLayer.wbLayerAnimation = .Text
+        self.wbLayer.wbLayerAnimation = .Border
     }
     
     private func setTextLayerToSelfLayer() {

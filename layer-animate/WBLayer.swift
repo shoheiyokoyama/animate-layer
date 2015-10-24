@@ -25,7 +25,7 @@ public class WBLayer {
     private var shadowAnimation = CABasicAnimation()
     private var textColorAnimation = CABasicAnimation()
     
-    public var animationBorderColor = UIColor.WBColor.Cyan {
+    public var animationBorderColor = UIColor.blackColor() {
         didSet {
             borderColorAnimtion.toValue = self.animationBorderColor.CGColor
             self.animationShadowColor = self.animationBorderColor
@@ -143,7 +143,7 @@ public class WBLayer {
     
     private func setBorderAnimation() {
         self.setBorderColorAnimation()
-        self.setborderWidthAnimation(0.0, toValue: 0.7)
+        self.setborderWidthAnimation(0.0, toValue: 1.0)
     }
     
     private func setLightBorderAnimation() {

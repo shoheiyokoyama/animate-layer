@@ -63,7 +63,7 @@ class ViewController: UIViewController, UITextFieldDelegate {
 //        toggleButton.sizeToFit()
 //        toggleButton.backgroundColor = UIColor.whiteColor()
         toggleButton.wbLayer.borderWidth = 2
-        toggleButton.buttonColor = UIColor.redColor()
+        toggleButton.buttonColor = UIColor.lightGrayColor()
         toggleButton.wbLayer.borderColor = UIColor.WBColor.Cyan
         self.view.addSubview(toggleButton)
 //        self.view.addSubview(toggleButton.wbView)
