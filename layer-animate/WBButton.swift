@@ -17,68 +17,13 @@ public enum WBButtonBlinkingAnimation {
 }
 
 public class WBButton: UIButton {
-    
-    private var blingShadow = CABasicAnimation()
-    private var blingColor = CABasicAnimation()
-    private var blingBackgroundColorAnimation = CABasicAnimation()
-    private var blingWidth = CABasicAnimation()
-    private var blingTextColorAnimation = CABasicAnimation()
-    
-    public var borderColor: UIColor = UIColor.WBColor.DeepOrange {
-        didSet {
-            self.layer.shadowColor = borderColor.CGColor
-            self.resetBlingColor()
-        }
-    }
-    
-    public var blingBackgroundColor = UIColor.WBColor.DeepOrange {
-        didSet {
-//            self.layer.shadowColor = blingBackgroundColor.CGColor
-//            self.resetBlingBackgroundColor()
-        }
-    }
-    
-    public var blingShadowColor = UIColor.WBColor.DeepOrange {
-        didSet {
-            self.layer.shadowColor = blingShadowColor.CGColor
-        }
-    }
-    
-//    public var backgroundColor = UIColor.clearColor() {
-//        didSet {
-//            
-//        }
-//    }
-    
-    public var blingTextColor = UIColor.WBColor.Brown
-    
-    public var animationDuration: CFTimeInterval = 3.0
-    
-    public var wbView: UIView = UIView()
-    
-    public var textAnimtion = false
-    private var isCallTextAnimation = false
-    
-    public var animateLayer = false {
-        didSet {
-            if animateLayer {
-                if textAnimtion {
-                    isCallTextAnimation ? self.setTextColor() : self.setTextAnimation()
 
-                } else {
-                    self.startAnimation()
-                }
-                
-            } else {
-                if textAnimtion {
-                    isCallTextAnimation ? self.stopTextAnimation() : print("hi")
-                } else {
-//                    self.layer.removeAllAnimations()
-//                    self.clearLayer()
-                    self.wbLayer.stopAnimation()
-                }
-                
-            }
+    private let textLayer = CATextLayer()
+    
+    public var buttonColor: UIColor = UIColor.clearColor() {
+        didSet {
+            self.backgroundColor = UIColor.clearColor()
+            self.wbLayer.backgroundColor = buttonColor
         }
     }
     
@@ -98,7 +43,7 @@ public class WBButton: UIButton {
                 return
 //                self.setLightBackgroundAnimation()
             case .Text:
-                self.textAnimtion = true
+                return
             }
         }
     }
@@ -111,6 +56,18 @@ public class WBButton: UIButton {
     
     public lazy var wbLayer: WBLayer = WBLayer(superLayer: self.layer)
     
+    override public func setTitle(title: String?, forState state: UIControlState) {
+        super.setTitle(title, forState: state)
+        self.setTitleColor(UIColor.clearColor(), forState: state)
+        self.setTextLayerToSelfLayer()
+    }
+    
+    override public func setTitleColor(color: UIColor?, forState state: UIControlState) {
+        super.setTitleColor(UIColor.clearColor(), forState: state)
+        self.textLayer.foregroundColor = color?.CGColor
+        self.wbLayer.textColor = color!
+    }
+    
     public override init(frame: CGRect) {
         super.init(frame: frame)
         self.setupLayer()
@@ -122,94 +79,40 @@ public class WBButton: UIButton {
     
     private func setupLayer() {
         cornerRadius = 5.0
+        self.wbLayer.textColor = UIColor.blackColor()
         
         self.contentEdgeInsets = UIEdgeInsets(top: 5.0, left: 5.0, bottom: 5.0, right: 5.0)
         
-//        self.backgroundColor = UIColor.clearColor()
-//        self.layer.masksTosBounds = false
-//        self.layer.shadowOffset = CGSize(width: 0.0, height: 0.0)
-//        self.layer.shadowColor = self.blingShadowColor.CGColor
-        
-        
-        self.wbView.userInteractionEnabled = false
-//        self.wbView.backgroundColor = UIColor.blackColor()
-        
-        self.wbLayer.wbLayerAnimation = .Background
+        self.wbLayer.wbLayerAnimation = .Text
         self.backgroundColor = UIColor.whiteColor() // for LineLight
+    }
+    
+    private func setTextLayerToSelfLayer() {
+        let font = UIFont.systemFontOfSize(17.0) //default
+        let text = self.currentTitle
         
-//        self.blingBackgroundColor = UIColor.yellowColor()
+        var attributes = [String: AnyObject]()
+        attributes[NSFontAttributeName] = font
+        let size = text!.sizeWithAttributes(attributes)
         
-//        self.clearLayer()
+        let x = (CGRectGetWidth(self.frame) - size.width) / 2
+        let y = (CGRectGetHeight(self.frame) - size.height) / 2
+        let height = size.height + self.layer.borderWidth
+        let width = size.width
+        let frame = CGRectMake(x, y, width, height)
         
+        textLayer.font = self.titleLabel?.font
+        textLayer.string = text
+        textLayer.fontSize = font.pointSize
+        
+        textLayer.foregroundColor = UIColor.blackColor().CGColor
+        textLayer.contentsScale = UIScreen.mainScreen().scale
+        
+        textLayer.frame = frame
+        textLayer.alignmentMode = kCAAlignmentCenter
+        
+        self.wbLayer.setTextLayer(textLayer)
     }
-    
-    private func setLightShadow() {
-        self.layer.shadowRadius = 3.0
-    }
-    
-    private func setLightBackgroundShadow() {
-        self.layer.shadowRadius = 7.0
-    }
-    
-    private func setShadow() {
-        switch wbButtonBlinkingAnimation {
-        case .Light:
-            self.setLightShadow()
-        case .LightBackground:
-            self.setLightBackgroundShadow()
-        default:
-            return
-        }
-    }
-    
-    private func clearLayer() {
-        self.layer.borderColor = UIColor.clearColor().CGColor
-        self.layer.borderWidth = 0
-        self.layer.shadowRadius = 0.0
-    }
-    
-    private func clearTextColor() {
-//        self.wbView.layer.mask = nil
-//        self.frame = CGRectMake(100, 450, self.frame.width, self.frame.height)
-    }
-    
-    private func stopTextAnimation() {
-//        self.wbView.layer.removeAnimationForKey("mask")
-    }
-    
-    private func setTextAnimation() {
-//        isCallTextAnimation = true
-//        self.wbView.frame = self.frame
-//        self.wbView.backgroundColor = UIColor.blackColor()
-//        self.setTextColor()
-//        self.wbView.layer.mask = self.layer
-//        
-//        print(self.frame)
-//        self.wbView.layer.mask!.position = CGPointMake(self.frame.width / 2, self.frame.height / 2)
-//        print(self.frame)
-    }
-
-    
-    private func setTextColor() {
-        blingTextColorAnimation = CABasicAnimation(keyPath: "backgroundColor")
-        blingTextColorAnimation.duration = animationDuration
-        blingTextColorAnimation.toValue = UIColor.blackColor().CGColor
-        blingTextColorAnimation.fromValue = UIColor.clearColor().CGColor
-        blingTextColorAnimation.autoreverses = true
-        blingTextColorAnimation.repeatCount = 1e100
-        self.wbView.layer.addAnimation(blingTextColorAnimation, forKey: "mask")
-    }
-    
-    private func resetBlingColor() {
-        blingColor.fromValue = UIColor.clearColor().CGColor
-        blingColor.toValue = self.borderColor.CGColor
-    }
-    
-    private func resetBlingBackgroundColor() {
-        blingBackgroundColorAnimation.fromValue = UIColor.clearColor().CGColor
-        blingBackgroundColorAnimation.toValue = self.blingBackgroundColor.CGColor
-    }
-
     
     public func startAnimation() {
         self.clearButton() // for LightBorder
@@ -223,7 +126,7 @@ public class WBButton: UIButton {
     private func clearButton() {
         switch wbLayer.wbLayerAnimation {
         case .Border :
-            self.backgroundColor = UIColor.clearColor()
+            self.backgroundColor = UIColor.whiteColor()
         case .LightBorder:
             self.backgroundColor = UIColor.whiteColor()
         default :
