@@ -198,6 +198,7 @@ public class WBLayer {
     }
     
     private func animateLightBorder(groupAnimation: CAAnimationGroup) {
+        self.superLayer.backgroundColor = UIColor.whiteColor().CGColor
         self.superLayer.shadowRadius = 5.0
         groupAnimation.animations?.append(shadowAnimation)
         self.superLayer.addAnimation(groupAnimation, forKey: "LightBorder")

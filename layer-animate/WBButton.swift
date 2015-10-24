@@ -12,7 +12,6 @@ public enum WBButtonBlinkingAnimation {
     case Line
     case Light
     case Background
-    case LightBackground
     case Text
 }
 
@@ -31,17 +30,11 @@ public class WBButton: UIButton {
         didSet {
             switch wbButtonBlinkingAnimation {
             case .Line:
-//                self.setLineAnimation()
                 return
             case .Light:
-                self.layer.backgroundColor = UIColor.whiteColor().CGColor
-//                self.setLightAnimation()
+                return
             case .Background:
                 return
-//                self.setBackgroundAnimation()
-            case .LightBackground:
-                return
-//                self.setLightBackgroundAnimation()
             case .Text:
                 return
             }
@@ -84,7 +77,6 @@ public class WBButton: UIButton {
         self.contentEdgeInsets = UIEdgeInsets(top: 5.0, left: 5.0, bottom: 5.0, right: 5.0)
         
         self.wbLayer.wbLayerAnimation = .Text
-        self.backgroundColor = UIColor.whiteColor() // for LineLight
     }
     
     private func setTextLayerToSelfLayer() {
@@ -115,24 +107,10 @@ public class WBButton: UIButton {
     }
     
     public func startAnimation() {
-        self.clearButton() // for LightBorder
         self.wbLayer.startAnimation()
     }
     
     public func stopAnimation() {
         self.wbLayer.stopAnimation()
     }
-    
-    private func clearButton() {
-        switch wbLayer.wbLayerAnimation {
-        case .Border :
-            self.backgroundColor = UIColor.whiteColor()
-        case .LightBorder:
-            self.backgroundColor = UIColor.whiteColor()
-        default :
-            return
-        }
-    }
-    
-    
 }
