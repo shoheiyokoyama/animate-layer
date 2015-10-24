@@ -20,6 +20,7 @@ class ViewController: UIViewController, UITextFieldDelegate {
     var isAnimateTextColor = true
     var originX: CGFloat = 100
     var originY: CGFloat = 500
+    var anmFlg = false
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -41,6 +42,8 @@ class ViewController: UIViewController, UITextFieldDelegate {
     }
     
     func setItems() {
+//        self.view.backgroundColor = UIColor.lightGrayColor()
+        
         wbTextField.layer.position = CGPoint(x: self.view.bounds.width / 2, y: self.view.bounds.height / 2 + 60)
         wbTextField.delegate = self
         wbTextField.borderColor = UIColor.WBColor.Cyan
@@ -58,9 +61,10 @@ class ViewController: UIViewController, UITextFieldDelegate {
         toggleButton.setTitleColor(UIColor.blackColor(), forState: .Normal)
         toggleButton.addTarget(self, action: "onClickMyButton:", forControlEvents: .TouchUpInside)
 //        toggleButton.sizeToFit()
-        toggleButton.backgroundColor = UIColor.clearColor()
-//        toggleButton.borderColor = UIColor.WBColor.Cyan
-        toggleButton.animateLayer = false
+//        toggleButton.backgroundColor = UIColor.whiteColor()
+        toggleButton.wbLayer.borderWidth = 2
+        toggleButton.backgroundColor = UIColor.redColor()
+        toggleButton.wbLayer.borderColor = UIColor.WBColor.Cyan
         toggleButton.animationDuration = 1.4
         self.view.addSubview(toggleButton)
 //        self.view.addSubview(toggleButton.wbView)
@@ -340,10 +344,12 @@ class ViewController: UIViewController, UITextFieldDelegate {
             wbTextField.animateLayer = true
         }
         
-        if toggleButton.animateLayer {
-            toggleButton.animateLayer = false
+        if !anmFlg {
+            anmFlg = true
+            toggleButton.startAnimation()
         } else {
-            toggleButton.animateLayer = true
+            anmFlg = false
+            toggleButton.stopAnimation()
         }
         
         if isAnimateTextColor {

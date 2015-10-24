@@ -28,14 +28,13 @@ public class WBButton: UIButton {
         didSet {
             self.layer.shadowColor = borderColor.CGColor
             self.resetBlingColor()
-            self.layer
         }
     }
     
     public var blingBackgroundColor = UIColor.WBColor.DeepOrange {
         didSet {
-            self.layer.shadowColor = blingBackgroundColor.CGColor
-            self.resetBlingBackgroundColor()
+//            self.layer.shadowColor = blingBackgroundColor.CGColor
+//            self.resetBlingBackgroundColor()
         }
     }
     
@@ -44,6 +43,12 @@ public class WBButton: UIButton {
             self.layer.shadowColor = blingShadowColor.CGColor
         }
     }
+    
+//    public var backgroundColor = UIColor.clearColor() {
+//        didSet {
+//            
+//        }
+//    }
     
     public var blingTextColor = UIColor.WBColor.Brown
     
@@ -57,7 +62,6 @@ public class WBButton: UIButton {
     public var animateLayer = false {
         didSet {
             if animateLayer {
-//                self.startAnimation()
                 if textAnimtion {
                     isCallTextAnimation ? self.setTextColor() : self.setTextAnimation()
 
@@ -69,12 +73,10 @@ public class WBButton: UIButton {
                 if textAnimtion {
                     isCallTextAnimation ? self.stopTextAnimation() : print("hi")
                 } else {
-                    self.layer.removeAllAnimations()
-                    self.clearLayer()
+//                    self.layer.removeAllAnimations()
+//                    self.clearLayer()
+                    self.wbLayer.stopAnimation()
                 }
-                
-//                self.layer.removeAllAnimations()
-//                self.clearLayer()
                 
             }
         }
@@ -84,14 +86,17 @@ public class WBButton: UIButton {
         didSet {
             switch wbButtonBlinkingAnimation {
             case .Line:
-                self.setLineAnimation()
+//                self.setLineAnimation()
+                return
             case .Light:
                 self.layer.backgroundColor = UIColor.whiteColor().CGColor
-                self.setLightAnimation()
+//                self.setLightAnimation()
             case .Background:
-                self.setBackgroundAnimation()
+                return
+//                self.setBackgroundAnimation()
             case .LightBackground:
-                self.setLightBackgroundAnimation()
+                return
+//                self.setLightBackgroundAnimation()
             case .Text:
                 self.textAnimtion = true
             }
@@ -103,6 +108,8 @@ public class WBButton: UIButton {
             self.layer.cornerRadius = cornerRadius
         }
     }
+    
+    public lazy var wbLayer: WBLayer = WBLayer(superLayer: self.layer)
     
     public override init(frame: CGRect) {
         super.init(frame: frame)
@@ -118,21 +125,21 @@ public class WBButton: UIButton {
         
         self.contentEdgeInsets = UIEdgeInsets(top: 5.0, left: 5.0, bottom: 5.0, right: 5.0)
         
-        self.backgroundColor = UIColor.clearColor()
+//        self.backgroundColor = UIColor.clearColor()
 //        self.layer.masksTosBounds = false
-        self.layer.shadowOffset = CGSize(width: 0.0, height: 0.0)
-        self.layer.shadowColor = self.blingShadowColor.CGColor
+//        self.layer.shadowOffset = CGSize(width: 0.0, height: 0.0)
+//        self.layer.shadowColor = self.blingShadowColor.CGColor
         
         
-        print(self.frame)
         self.wbView.userInteractionEnabled = false
 //        self.wbView.backgroundColor = UIColor.blackColor()
         
-        self.wbButtonBlinkingAnimation = .Text
+        self.wbLayer.wbLayerAnimation = .Background
+        self.backgroundColor = UIColor.whiteColor() // for LineLight
         
-        self.blingBackgroundColor = UIColor.yellowColor()
+//        self.blingBackgroundColor = UIColor.yellowColor()
         
-        self.clearLayer()
+//        self.clearLayer()
         
     }
     
@@ -166,49 +173,22 @@ public class WBButton: UIButton {
 //        self.frame = CGRectMake(100, 450, self.frame.width, self.frame.height)
     }
     
-    private func setLineAnimation() {
-        self.setBlingColor()
-        self.setBlingWidth(0.0, toValue: 1.0)
-    }
-    
     private func stopTextAnimation() {
-        self.wbView.layer.removeAnimationForKey("mask")
+//        self.wbView.layer.removeAnimationForKey("mask")
     }
     
     private func setTextAnimation() {
-        isCallTextAnimation = true
-        self.wbView.frame = self.frame
-        self.wbView.backgroundColor = UIColor.blackColor()
-        self.setTextColor()
-        self.wbView.layer.mask = self.layer
-        
-        print(self.frame)
-        self.wbView.layer.mask!.position = CGPointMake(self.frame.width / 2, self.frame.height / 2)
-        print(self.frame)
+//        isCallTextAnimation = true
+//        self.wbView.frame = self.frame
+//        self.wbView.backgroundColor = UIColor.blackColor()
+//        self.setTextColor()
+//        self.wbView.layer.mask = self.layer
+//        
+//        print(self.frame)
+//        self.wbView.layer.mask!.position = CGPointMake(self.frame.width / 2, self.frame.height / 2)
+//        print(self.frame)
     }
-    
-    private func setLightAnimation() {
-        self.setBlingColor()
-        self.setBlingShadow(0.0, toValue: 0.5)
-        self.setBlingWidth(0.0, toValue: 0.6)
-    }
-    
-    private func setBackgroundAnimation() {
-        self.setBackgroundColor()
-    }
-    
-    private func setLightBackgroundAnimation() {
-        self.setBlingShadow(0.0, toValue: 1.0)
-        self.setBackgroundColor()
-    }
-    
-    private func setBackgroundColor() {
-        blingBackgroundColorAnimation = CABasicAnimation(keyPath: "backgroundColor")
-        blingBackgroundColorAnimation.fromValue = UIColor.clearColor().CGColor
-        blingBackgroundColorAnimation.toValue = self.blingBackgroundColor.CGColor
-        blingBackgroundColorAnimation.autoreverses = true
-        self.layer.borderColor = self.blingBackgroundColor.CGColor
-    }
+
     
     private func setTextColor() {
         blingTextColorAnimation = CABasicAnimation(keyPath: "backgroundColor")
@@ -220,13 +200,6 @@ public class WBButton: UIButton {
         self.wbView.layer.addAnimation(blingTextColorAnimation, forKey: "mask")
     }
     
-    private func setBlingColor() {
-        blingColor = CABasicAnimation(keyPath: "borderColor")
-        blingColor.fromValue = UIColor.clearColor().CGColor
-        blingColor.toValue = self.borderColor.CGColor
-        self.layer.borderColor = self.borderColor.CGColor
-    }
-    
     private func resetBlingColor() {
         blingColor.fromValue = UIColor.clearColor().CGColor
         blingColor.toValue = self.borderColor.CGColor
@@ -236,35 +209,27 @@ public class WBButton: UIButton {
         blingBackgroundColorAnimation.fromValue = UIColor.clearColor().CGColor
         blingBackgroundColorAnimation.toValue = self.blingBackgroundColor.CGColor
     }
+
     
-    private func setBlingShadow(fromValue: Float, toValue: Float) {
-        blingShadow = CABasicAnimation(keyPath: "shadowOpacity")
-        blingShadow.fromValue = fromValue
-        blingShadow.toValue = toValue
-        self.layer.shadowOpacity = toValue
+    public func startAnimation() {
+        self.clearButton() // for LightBorder
+        self.wbLayer.startAnimation()
     }
     
-    private func setBlingWidth(fromValue: CGFloat, toValue: CGFloat) {
-        blingWidth = CABasicAnimation(keyPath: "borderWidth")
-        blingWidth.fromValue = fromValue
-        blingWidth.toValue = toValue
-        self.layer.borderWidth = toValue
+    public func stopAnimation() {
+        self.wbLayer.stopAnimation()
     }
     
-    private func startAnimation() {
-        if !animateLayer {
+    private func clearButton() {
+        switch wbLayer.wbLayerAnimation {
+        case .Border :
+            self.backgroundColor = UIColor.clearColor()
+        case .LightBorder:
+            self.backgroundColor = UIColor.whiteColor()
+        default :
             return
         }
-        
-        self.setShadow()
-        
-        let bothAnimation: CAAnimationGroup = CAAnimationGroup()
-        bothAnimation.duration = self.animationDuration
-        bothAnimation.animations = [blingColor, blingShadow, blingWidth, blingBackgroundColorAnimation, blingTextColorAnimation]
-        bothAnimation.timingFunction = CAMediaTimingFunction(name: kCAMediaTimingFunctionEaseInEaseOut)
-        bothAnimation.delegate = self
-        bothAnimation.autoreverses = true
-        bothAnimation.repeatCount = 1e100
-        self.layer.addAnimation(bothAnimation, forKey: "color and width and shadow")
     }
+    
+    
 }
