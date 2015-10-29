@@ -86,6 +86,8 @@ class ViewController: UIViewController, UITextFieldDelegate {
         self.textLayerTest(label.text!)
         
         
+        
+        
         let a:CGFloat = 10
         let b:CGFloat = a * 2
         
@@ -107,6 +109,10 @@ class ViewController: UIViewController, UITextFieldDelegate {
         subLayerCircle.frame = CGRect(x: (self.toggleButton.bounds.width - d) / 2, y: (self.toggleButton.bounds.height - d) / 2, width: d, height: d)
 //        self.toggleButton.layer.addSublayer(subLayerCircle)
 //        self.doubleRippleAnimation(layerCircle, subCircle: subLayerCircle)
+        
+//        let color = SYColor.ChestnutRose
+//        self.view.backgroundColor = color
+        
         
     }
     

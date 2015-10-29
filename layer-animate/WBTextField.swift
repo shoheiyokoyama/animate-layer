@@ -86,6 +86,8 @@ public class WBTextField: UITextField {
         }
     }
     
+    public lazy var wbLayer: WBLayer = WBLayer(superLayer: self.layer)
+    
     public override init(frame: CGRect) {
         super.init(frame: frame)
         self.setupLayer()
@@ -120,6 +122,8 @@ public class WBTextField: UITextField {
         
         self.clearShadow()
         self.clearBorder()
+        
+        self.wbLayer.wbLayerAnimation = .LightBorder
     }
     
     public func checkEmptyText() -> Bool {
@@ -173,21 +177,7 @@ public class WBTextField: UITextField {
     }
     
     private func appear() {
-        if !animateLayer {
-            return
-        }
-        
-        self.layer.shadowRadius = 3.0
-        
-        let groupAnimation: CAAnimationGroup = CAAnimationGroup()
-        groupAnimation.duration = self.animationDuration / 2
-        groupAnimation.animations = [fadeInShadow, fadeInColor, fadeInWidth]
-        groupAnimation.timingFunction = CAMediaTimingFunction(name: kCAMediaTimingFunctionEaseInEaseOut)
-        groupAnimation.delegate = self
-        groupAnimation.autoreverses = true
-        groupAnimation.repeatCount = 1e100
-        self.layer.addAnimation(groupAnimation, forKey: "shadow and color and width")
-        showBorder = true
+        self.wbLayer.startAnimation()
     }
     
     override public func beginTrackingWithTouch(touch: UITouch, withEvent event: UIEvent?) -> Bool {
