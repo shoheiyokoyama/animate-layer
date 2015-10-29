@@ -49,7 +49,7 @@ public class WBLayer {
     public var animationDuration: CFTimeInterval = 1.4
     
     public var textColor = UIColor()
-    public var backgroundColor = UIColor() {
+    public var backgroundColor = UIColor.clearColor() {
         didSet {
             self.superLayer.backgroundColor = self.backgroundColor.CGColor
         }

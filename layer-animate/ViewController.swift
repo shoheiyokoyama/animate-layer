@@ -52,7 +52,7 @@ class ViewController: UIViewController, UITextFieldDelegate {
         
         let diameter = 100
         shapeLayer.strokeColor = UIColor.blueColor().CGColor
-        shapeLayer.fillColor = UIColor.whiteColor().CGColor
+        shapeLayer.fillColor = UIColor.clearColor().CGColor
         shapeLayer.lineWidth = 1
         shapeLayer.path = UIBezierPath(ovalInRect: CGRect(x: 100, y: 100, width: diameter, height: diameter)).CGPath
         self.view.layer.addSublayer(shapeLayer)
@@ -63,7 +63,7 @@ class ViewController: UIViewController, UITextFieldDelegate {
 //        toggleButton.sizeToFit()
 //        toggleButton.backgroundColor = UIColor.whiteColor()
         toggleButton.wbLayer.borderWidth = 2
-        toggleButton.buttonColor = UIColor.lightGrayColor()
+//        toggleButton.buttonColor = UIColor.lightGrayColor()
         toggleButton.wbLayer.borderColor = UIColor.WBColor.Cyan
         self.view.addSubview(toggleButton)
 //        self.view.addSubview(toggleButton.wbView)
@@ -81,11 +81,80 @@ class ViewController: UIViewController, UITextFieldDelegate {
         print(label.font)
         
 //        self.textAnimate(label)
+//        self.animateCircle()
         
-        self.animateCircle()
         self.textLayerTest(label.text!)
         
+        
+        let a:CGFloat = 10
+        let b:CGFloat = a * 2
+        
+        let layerCircle = CALayer()
+        layerCircle.backgroundColor = UIColor.WBColor.BlueGrey.CGColor
+        layerCircle.cornerRadius = a
+        layerCircle.frame = CGRect(x: (self.toggleButton.bounds.width - b) / 2, y: (self.toggleButton.bounds.height - b) / 2, width: b, height: b)
+//        self.toggleButton.layer.addSublayer(layerCircle)
+//        self.lazyRipple(layerCircle)
+        
+        let c:CGFloat = 13
+        let d:CGFloat = c * 2
+        
+        let subLayerCircle = CALayer()
+        subLayerCircle.borderWidth = 1
+        subLayerCircle.borderColor = layerCircle.backgroundColor
+        subLayerCircle.backgroundColor = UIColor.clearColor().CGColor
+        subLayerCircle.cornerRadius = c
+        subLayerCircle.frame = CGRect(x: (self.toggleButton.bounds.width - d) / 2, y: (self.toggleButton.bounds.height - d) / 2, width: d, height: d)
+//        self.toggleButton.layer.addSublayer(subLayerCircle)
+//        self.doubleRippleAnimation(layerCircle, subCircle: subLayerCircle)
+        
     }
+    
+    private func lazyRipple(circle: CALayer) {
+        let backgroundLayer = CALayer()
+        backgroundLayer.frame = toggleButton.bounds
+        backgroundLayer.opacity = 0.0
+        toggleButton.layer.addSublayer(backgroundLayer)
+        backgroundLayer.addSublayer(circle)
+        
+        
+        
+//        var mask = CAShapeLayer()
+//        mask.path = UIBezierPath(roundedRect: toggleButton.bounds, cornerRadius: toggleButton.cornerRadius).CGPath
+        
+        
+        let scale = CABasicAnimation(keyPath: "transform.scale")
+        scale.fromValue = 0.4
+        scale.toValue = 1.0
+        scale.duration = 3.0
+        
+//        let scale = CABasicAnimation(keyPath: "backgroundColor")
+//        scale.fromValue = UIColor.clearColor().CGColor
+//        scale.toValue = UIColor.redColor().CGColor
+//        scale.duration = 3.0
+        circle.addAnimation(scale, forKey: "nil")
+    }
+    
+    private func doubleRippleAnimation(circle: CALayer, subCircle: CALayer) {
+        let fadeOutOpacity = CABasicAnimation(keyPath: "opacity")
+        fadeOutOpacity.fromValue = 1.0
+        fadeOutOpacity.toValue = 0.0
+        
+        let scale = CABasicAnimation(keyPath: "transform.scale")
+        scale.fromValue = 0.4
+        scale.toValue = 1.0
+      
+        let animationGroup = CAAnimationGroup()
+        animationGroup.duration = 2.0
+//        animationGroup.fillMode = kCAFillModeForwards
+        animationGroup.removedOnCompletion = false
+        animationGroup.repeatCount = 1e100
+        animationGroup.animations = [fadeOutOpacity, scale]
+        
+        circle.addAnimation(animationGroup, forKey: nil)
+        subCircle.addAnimation(animationGroup, forKey: nil)
+    }
+
     
     private func textLayerTest(text: NSString) {
         
